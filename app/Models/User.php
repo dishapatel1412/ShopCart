@@ -26,8 +26,6 @@ class User extends Authenticatable implements CanResetPassword
         'otp_expires_at',
         'address',
         'google_id',
-        'facebook_id',
-        'device_token',
         'session_id'
     ];
 

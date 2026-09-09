@@ -15,16 +15,6 @@ class SocialAuthController extends Controller
     {
         $this->validateProvider($provider);
 
-        // For Facebook, stateless + explicit scopes
-        if ($provider === 'facebook') {
-            /** @var \Laravel\Socialite\Two\FacebookProvider $driver */
-            $driver = Socialite::driver('facebook');
-            // @intelephense-ignore-next-linex
-            return $driver->setScopes(['public_profile'])
-                ->stateless()
-                ->redirect();
-        }
-
         return Socialite::driver($provider)->redirect();
     }
 
@@ -32,15 +22,13 @@ class SocialAuthController extends Controller
     {
         $this->validateProvider($provider);
 
-        if ($provider === 'facebook') {
-            /** @var \Laravel\Socialite\Two\FacebookProvider $driver */
-            $driver = Socialite::driver('facebook');
-            $response = $driver->stateless()->user();
-        } else {
-            $response = Socialite::driver($provider)->user();
-        }
+        $response = Socialite::driver($provider)->user();
+        
+        $email = $response->getEmail();
 
-        $email = $response->getEmail() ?? $response->getId() . '@facebook.local';
+        if (!$email) { 
+            abort(400, 'Unable to retrieve email from Google.'); 
+        }
 
         $user = User::firstOrCreate(
             ['email' => $email],
@@ -59,6 +47,7 @@ class SocialAuthController extends Controller
         $user->update($data);
 
         Auth::login($user);
+
         $request->session()->regenerate();
 
         $user->session_id = session()->getId();
@@ -69,7 +58,7 @@ class SocialAuthController extends Controller
 
     private function validateProvider(string $provider)
     {
-        if (!in_array($provider, ['google', 'facebook'])) {
+        if (!in_array($provider, ['google'])) {
             abort(404);
         }
     }

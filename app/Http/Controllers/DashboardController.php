@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
+use App\Models\User;
+use App\Models\Group;
+use App\Models\GroupMember;
 
 class DashboardController extends Controller
 {
@@ -42,6 +46,8 @@ class DashboardController extends Controller
         //     $products->where('name', 'like', '%' . $request->search . '%');
         // }
 
-        return view('dashboard', compact('products', 'search', 'productsJson'));
+        $users = User::where('id', '!=', Auth::id())->get();
+
+        return view('dashboard', compact('products', 'search', 'productsJson', 'users'));
     }
 }

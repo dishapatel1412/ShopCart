@@ -88,11 +88,22 @@
 
     {{-- Contact --}}
     <p class="text-muted small text-uppercase fw-bold px-2 mb-1">Contact</p>
-    <ul class="nav flex-column">
+    <ul class="nav flex-column mb-4">
         <li class="nav-item">
             <a class="nav-link text-dark {{ request()->is('admin/contact') ? 'active bg-white border-start border-3 border-primary' : '' }}"
                href="{{ route('admin.contact.index') }}">
                Contact
+            </a>
+        </li>
+    </ul>
+
+    {{-- Chats --}}
+    <p class="text-muted small text-uppercase fw-bold px-2 mb-1">Chats</p>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link text-dark {{ request()->is('admin/chat') ? 'active bg-white border-start border-3 border-primary' : '' }}"
+               href="{{ route('admin.reply.chat') }}">
+               Chat
             </a>
         </li>
     </ul>

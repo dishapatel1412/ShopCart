@@ -9,7 +9,6 @@ use App\Models\Coupon;
 
 class CartController extends Controller
 {
-    // Show cart page
     public function index()
     {
         $cartItems = Cart::with(['product', 'size', 'color'])
@@ -39,7 +38,6 @@ class CartController extends Controller
         return view('cart', compact('cartItems', 'subtotal', 'discount', 'coupon', 'total'));
     }
 
-    // Add to cart
     public function add(Request $request)
     {
         $request->validate([
@@ -47,7 +45,6 @@ class CartController extends Controller
             'quantity'   => 'integer|min:1',
         ]);
 
-        // If product already in cart, increase quantity
         $cartItem = Cart::where('user_id', Auth::id())
             ->where('product_id', $request->product_id)
             ->where('size_id', $request->size_id)
@@ -73,7 +70,6 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Product added to cart!');
     }
 
-    // Update quantity
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -87,7 +83,6 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Cart updated!');
     }
 
-    // Remove item
     public function remove($id)
     {
         Cart::where('id', $id)
@@ -97,7 +92,6 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Item removed!');
     }
 
-    // Apply coupon
     public function applyCoupon(Request $request)
     {
         $request->validate([
@@ -112,12 +106,10 @@ class CartController extends Controller
             return redirect()->route('cart.index')->with('error', 'Invalid or inactive coupon code!');
         }
 
-        // Check usage limit
         if ($coupon->usage_limit && $coupon->used_count >= $coupon->usage_limit) {
             return redirect()->route('cart.index')->with('error', 'Coupon usage limit reached!');
         }
 
-        // Check minimum order
         $cartTotal = Cart::with('product')
             ->where('user_id', Auth::id())
             ->get()
@@ -132,7 +124,6 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Coupon applied successfully!');
     }
 
-    // Remove coupon
     public function removeCoupon()
     {
         session()->forget('coupon');
@@ -182,7 +173,6 @@ class CartController extends Controller
             ]);
         }
 
-        // Store coupon in session
         session(['coupon' => $coupon->code]);
 
         return response()->json([

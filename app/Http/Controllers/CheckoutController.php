@@ -12,18 +12,14 @@ use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Services\FirebaseService;
 use App\Services\WhatsappMessageService;
 
 class CheckoutController extends Controller
 {
-
-    protected FirebaseService $firebaseService;
     protected WhatsappMessageService $whatsapp;
 
-    public function __construct(FirebaseService $firebaseService, WhatsappMessageService $whatsapp)
+    public function __construct(WhatsappMessageService $whatsapp)
     {
-        $this->firebaseService = $firebaseService;
         $this->whatsapp = $whatsapp;
     }
 
@@ -197,25 +193,6 @@ class CheckoutController extends Controller
                 \Log::error('WhatsApp failed: ' . $e->getMessage());
             }
 
-            // Customer Notification
-            if ($user && $user->device_token) {
-                $this->firebaseService->sendNotification(
-                    $user->device_token,
-                    'Order Placed Successfully',
-                    'Your COD order has been placed successfully.'
-                );
-            }
-
-            $admin = User::where('role', 'admin')->first();
-            
-            if ($admin && $admin->device_token) {
-                $this->firebaseService->sendNotification(
-                    $admin->device_token,
-                    'New Order Received',
-                    'A customer has placed a new order.'
-                );
-            }
-
             // Cart::whereIn('id', $selectedItems)->delete();
             Cart::where('user_id', Auth::id())
                 ->whereIn('id', $selectedItems)
@@ -362,28 +339,10 @@ class CheckoutController extends Controller
             \Log::error("WhatsApp failed: " . $e->getMessage());
         }
 
-        if ($user && $user->device_token) {        
-            $this->firebaseService->sendNotification(
-                $user->device_token,
-                'Payment Successful',
-                'Your order has been confirmed successfully.'
-            );
-        }
-
-        $admin = User::where('role', 'admin')->first();
-
-        if ($admin && $admin->device_token) {
-            $this->firebaseService->sendNotification(
-                $admin->device_token,
-                'New Order Received',
-                'A customer has placed a new order.'
-            );
-        }
-
         Mail::to($order->email)->send(new OrderPlacedMail($order));
 
         return redirect('http://localhost:8000/order/success/' . $order->id)
-            ->with('success', '🎉 Payment successful! Order #' . $order->id . ' confirmed.');
+            ->with('success', 'Payment successful! Order #' . $order->id . ' confirmed.');
     }
 
     public function paymentCancel(Request $request)

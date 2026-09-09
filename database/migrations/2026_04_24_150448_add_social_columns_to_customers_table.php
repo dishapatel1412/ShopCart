@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('customers', function (Blueprint $table) {
             $table->string('google_id')->nullable()->after('remember_token');
-            $table->string('facebook_id')->nullable()->after('google_id');
         });
     }
 

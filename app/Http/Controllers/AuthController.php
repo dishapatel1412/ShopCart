@@ -31,7 +31,6 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    // Handle Registration
     public function register(Request $request)
     {
         $request->validate([
@@ -49,13 +48,11 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Registered! Please login.');
     }
 
-    // Show Login Form
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    // Handle Login
     public function login(Request $request)
     {
         $request->validate([
@@ -63,7 +60,6 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // $user = User::where('email', $request->email)->first();
         if (filter_var($request->login, FILTER_VALIDATE_EMAIL)) {
             $user = User::where('email', $request->login)->first();
             $type = 'email';
@@ -80,7 +76,6 @@ class AuthController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            // store session_id for middleware
             $user->session_id = session()->getId();
             $user->save();
 
@@ -98,13 +93,11 @@ class AuthController extends Controller
         $user->otp_expires_at = Carbon::now()->addMinutes(10);
         $user->save();
 
-        // session(['otp_user_id' => $user->id]);
         session([
             'otp_user_id' => $user->id,
             'otp_type' => $type
         ]);
 
-        // Mail::to($user->email)->send(new OtpMail($otp));
         if ($type === 'email') {
             Mail::to($user->email)->send(new OtpMail($otp));
         } else {
@@ -116,13 +109,11 @@ class AuthController extends Controller
         return redirect()->route('otp.form');
     }   
 
-    // Show OTP form
     public function showOtpForm()
     {
         return view('auth.verify-otp');
     }
 
-    // verify OTP
     public function verifyOtp(Request $request)
     {
         $request->validate([
@@ -166,13 +157,11 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'Login successful');
     }
 
-    // load 
     public function show2faForm()
     {
         if (!session('2fa_user_id')) {
             return redirect()->route('login');
         }
-
         return view('auth.2fa');
     }
 
@@ -203,7 +192,6 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        // store session_id
         $user->session_id = session()->getId();
         $user->save();
 
@@ -216,15 +204,12 @@ class AuthController extends Controller
     {
         $google2fa = new Google2FA();
 
-        // Generate secret (TEMP – don’t save yet)
         $secret = $google2fa->generateSecretKey();
 
-        // Store in session until verified
         session(['2fa_secret' => $secret]);
 
         $user = Auth::user();
 
-        // Generate QR
         $otpUrl = $google2fa->getQRCodeUrl(
             'ShopCart',
             $user->email,
@@ -236,7 +221,6 @@ class AuthController extends Controller
         return view('auth.enable2fa', compact('qrCodeUrl'));
     }
 
-    // enable two-factor authentication
     public function enable2fa(Request $request)
     {
         $request->validate([
@@ -270,7 +254,6 @@ class AuthController extends Controller
             ->with('success', '2FA enabled successfully');
     }
 
-    // disable two-factor authentication
     public function disable2fa(Request $request)
     {
         $user = Auth::user();
@@ -282,13 +265,11 @@ class AuthController extends Controller
         return back()->with('success', '2FA disabled successfully');
     }
 
-    // forgot password
     public function forgotPassword()
     {
         return view('auth.forgot-password');
     }
 
-    // reset password
     public function sendResetLink(Request $request)
     {
         $request->validate(['email' => 'required|email']);
@@ -336,7 +317,6 @@ class AuthController extends Controller
             : back()->withErrors(['email' => [__($status)]]);
     }
 
-    // Logout
     public function logout()
     {
         session()->flush();

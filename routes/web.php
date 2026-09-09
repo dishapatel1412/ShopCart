@@ -21,6 +21,8 @@ use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\PanelController;
 use App\Http\Controllers\ProductInquiryController;
 use App\Http\Controllers\Admin\ProductInquiryController as AdminInquiryController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\Admin\ChatController as AdminChatController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -51,8 +53,8 @@ Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callbackS
 
 
 Route::middleware(['check.auth', 'check.session'])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::redirect('/', '/dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
@@ -70,7 +72,6 @@ Route::middleware(['check.auth', 'check.session'])->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-    Route::post('/save-device-token', [ProfileController::class, 'saveDeviceToken']);
 
     Route::get('/contact', [ContactController::class, 'index'])->name('contact.form');
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
@@ -92,6 +93,8 @@ Route::middleware(['check.auth', 'check.session'])->group(function () {
     Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
     Route::post('/admin/orders/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
     Route::get('/admin/{id}/invoice', [AdminOrderController::class, 'downloadInvoice'])->name('admin.invoice.download');
+
+    Route::post('/chat/upload', [ChatController::class, 'upload'])->name('chat.upload');
 });
 
 Route::get('/payment/success', [CheckoutController::class, 'paymentSuccess'])->name('payment.success');
@@ -136,6 +139,8 @@ Route::prefix('admin')->middleware(['admin', 'check.session'])->group(function (
     Route::get('/coupons/{id}/edit', [CouponController::class, 'edit'])->name('admin.coupons.edit');
     Route::post('/coupons/{id}', [CouponController::class, 'update'])->name('admin.coupons.update');
     Route::post('/coupons/{id}/delete', [CouponController::class, 'destroy'])->name('admin.coupons.destroy');
+
+    Route::get('/chat', [AdminChatController::class, 'index'])->name('admin.reply.chat');
 });
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');

@@ -6,19 +6,9 @@ use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use App\Models\Order;
-use App\Services\FirebaseService;
 
 class OrderController extends Controller
 {
-
-    protected FirebaseService $firebaseService;
-
-    public function __construct(FirebaseService $firebaseService)
-    {
-        $this->firebaseService = $firebaseService;
-    }
-
-
     // All orders of logged in user
     public function index()
     {

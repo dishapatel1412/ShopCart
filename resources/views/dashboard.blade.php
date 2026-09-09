@@ -29,7 +29,8 @@
                         @if($product->image)
                             <img src="{{ asset('storage/' . $product->image) }}"
                                     class="card-img-top"
-                                    style="height: 220px; width: 100%; object-fit: contain; padding: 10px; background: #ffffff;">
+                                    style="height: 220px; width: 100%; object-fit: contain; padding: 10px; background: #ffffff;"
+                                    >
                         @else
                             <div class="bg-light d-flex align-items-center justify-content-center"
                                     style="height: 220px; width: 100%;">
@@ -172,6 +173,261 @@
         </div>
     @endif
 
+    <div class="position-fixed bottom-3 right-3 
+            rounded-circle bg-primary 
+            d-flex align-items-center justify-content-center 
+            text-white p-3"
+        data-bs-toggle="modal"
+        data-bs-target="#chatModal"
+    >
+        <i class="bi bi-chat"></i>
+    </div>
+
+    {{-- Chat Modal --}}
+    <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content chat-modal">
+                <!-- Header -->
+                <div class="modal-header bg-success text-white">
+                    <div class="d-flex flex-col gap-2">
+                        <h5 class="modal-title" id="chatModalLabel">ShopCart Chat</h5>
+                        <div id="status-indicator"></div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body chat-body p-0">
+                    <div class="row g-0 h-100">
+                        <!-- Sidebar -->
+                        <div class="col-3 border-end bg-white">
+                            <!-- Header -->
+                            <div class="p-2 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <strong>Chats</strong>
+                                    <button
+                                        class="btn btn-success btn-sm"
+                                        {{-- data-bs-toggle="modal"
+                                        data-bs-target="#createGroupModal" --}}
+                                        id="create-group-modal-btn"
+                                    >
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Conversations -->
+                            <div id="conversation-list">
+                                <div 
+                                    id="groups-container"
+                                    class="d-flex flex-column gap-2 border-bottom"
+                                >
+                                    <div 
+                                        class="conversation-row fw-semibold px-3 py-3 border-bottom"
+                                        data-type="admin"
+                                        data-id="admin"
+                                    >
+                                        ShopCart Admin
+                                    </div>
+                                    <!-- Dynamic Groups -->
+                                    @if(isset($groups))
+                                        @foreach($groups as $group)
+                                            <div
+                                                class="conversation-row fw-semibold px-3 py-3 border-bottom"
+                                                data-type="group"
+                                                data-id="{{ $group->id }}"
+                                            >
+                                                {{-- {{ $group->group_name }} --}}
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <img
+                                                            src="{{ $group->group_image ? asset('storage/'.$group->group_image) : asset('images/default-group.png') }}"
+                                                            width="45"
+                                                            height="45"
+                                                            class="rounded-circle me-2"
+                                                            style="object-fit:cover"
+                                                        >
+                                                        <span>{{ $group->group_name }}</span>
+                                                    </div>
+                                                    <button
+                                                        id="edit-group-btn"
+                                                        class="btn btn-sm btn-outline-secondary"
+                                                    >
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Area -->
+                        <div class="col-9 d-flex flex-column">
+                            <!-- Chat Header -->
+                            <div id="chat-header" class="d-flex align-items-center border-bottom px-3 py-2 bg-white">
+                                <img
+                                    id="chat-group-image"
+                                    src="{{ asset('images/default-group.png') }}"
+                                    width="50"
+                                    height="50"
+                                    class="rounded-circle me-3"
+                                    style="object-fit:cover"
+                                >
+                                <div>
+                                    <h5 class="mb-0" id="chat-title">
+                                        Select a conversation
+                                    </h5>
+                                    <small id="chat-subtitle" class="text-muted">
+                                    </small>
+                                </div>
+                            </div>
+                            <!-- Chat Messages -->
+                            <div
+                                id="chat-box"
+                                class="p-3 flex-grow-1"
+                                style="overflow-y:auto;"
+                            >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer d-flex align-items-center">
+                    <div class="input-group">
+                        <!-- Media icon -->
+                        <label for="chat-media" class="btn btn-light border rounded-start">
+                            <i class="bi bi-paperclip"></i>
+                        </label>
+                        <input type="file" id="chat-media" name="chat-media" class="d-none" multiple>
+
+                        <!-- Textbox -->
+                        <input type="text" id="message" name="message" placeholder="Type a message..." class="form-control">
+
+                        <!-- Audio Record -->
+                        <button id="record-btn" class="btn btn-light">
+                            <i class="bi bi-mic"></i>
+                        </button>
+
+                        {{-- Sending location --}}
+                        <button id="location-btn" class="btn btn-light">
+                            <i class="bi bi-geo-alt"></i>
+                        </button>
+
+                        <!-- Send button -->
+                        <button class="btn btn-success" id="send-btn">
+                            <i class="bi bi-send"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="media-preview" class="mt-2"></div>
+                <audio id="audio-preview" controls class="mt-2 d-none"></audio>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editGroupModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Edit Group</h5>
+                </div>
+                <div class="modal-body">
+                    <input
+                        type="text"
+                        id="edit-group-name"
+                        class="form-control mb-3"
+                    >
+                    <input
+                        type="file"
+                        id="edit-group-image"
+                        class="form-control"
+                        accept="image/*"
+                    >
+                </div>
+                <div class="modal-footer">
+                    <button
+                        id="update-group-btn"
+                        class="btn btn-success"
+                    >
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div class="modal fade" id="createGroupModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Create Group</h5>
+                </div>
+                <div class="modal-body">
+                    <input
+                        type="text"
+                        id="group-name"
+                        class="form-control mb-3"
+                        placeholder="Group Name"
+                    >
+                    <input
+                        type="file"
+                        id="group-image"
+                        class="form-control mb-3"
+                        accept="image/*"
+                    >
+                    <div id="group-users">
+                        @foreach($users as $user)
+                            <div class="form-check mb-2">
+                                <input
+                                    class="form-check-input group-member"
+                                    type="checkbox"
+                                    value="{{ $user->id }}"
+                                    id="member{{ $user->id }}"
+                                >
+                                <label class="form-check-label">
+                                    {{ $user->name }}
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-success"
+                        id="create-group-btn"
+                    >
+                        Create
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Options Modal -->
+    <div class="modal fade" id="locationOptionsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Share Location</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <button id="current-location-btn" class="btn btn-success w-100 mb-2">
+                        Send Current Location
+                    </button>
+                    <button id="custom-location-btn" class="btn btn-outline-success w-100">
+                        Enter Specific Location
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Product Detail Modal --}}
     <div class="modal fade" id="productModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -238,7 +494,7 @@
                                 {{-- Buttons --}}
                                 <div class="d-flex gap-3 mb-3">
                                     <button type="submit"
-                                            class="btn flex-grow-1 py-2 fw-bold d-flex align-items-center justify-content-center gap-2"
+                                            class="btn grow py-2 fw-bold d-flex align-items-center justify-content-center gap-2"
                                             style="background:#1a1a1a; color:white; border-radius:10px;"
                                             onclick="document.getElementById('modalBuyNow').value=0">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
@@ -250,7 +506,7 @@
                                         Add to Cart
                                     </button>
                                     <button type="submit"
-                                            class="btn flex-grow-1 py-2 fw-bold d-flex align-items-center justify-content-center gap-2"
+                                            class="btn grow py-2 fw-bold d-flex align-items-center justify-content-center gap-2"
                                             style="background:linear-gradient(135deg,#667eea,#764ba2); color:white; border-radius:10px; border:none;"
                                             onclick="document.getElementById('modalBuyNow').value=1">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
@@ -372,7 +628,7 @@
             document.getElementById('modalWishlistProductId').value   = product.id;
             document.getElementById('modalName').textContent          = product.name;
             document.getElementById('modalPrice').textContent         = '₹' + Number(product.price).toLocaleString('en-IN');
-            document.getElementById('modalCategory').textContent      = product.category;
+            document.getElementById('modalCategory').textContent      = product.cFategory;
             document.getElementById('modalImage').src                 = product.image;
 
             // Sizes
@@ -436,5 +692,36 @@
 
             document.getElementById('modalWishlistProductId').value = productId;
         });
+
+        document.getElementById('chat-media').addEventListener('change', function() {
+            const files = this.files;
+            const preview = document.getElementById('media-preview');
+            preview.innerHTML = '';
+
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.classList.add('img-thumbnail', 'me-2');
+                        img.style.height = '50px';
+                        preview.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    const badge = document.createElement('span');
+                    badge.classList.add('badge', 'bg-secondary', 'me-2');
+                    badge.textContent = file.name;
+                    preview.appendChild(badge);
+                }
+            });
+        });
+
+        // document.getElementById('chat-title').textContent = groupName;
+        // document.getElementById('chat-group-image').src = groupImage;
+
+        window.userId = {{ Auth::id() }} // can be changed to auth()->id()
+        window.userName = "{{ Auth::user()->name }}";
     </script>
 @endsection
