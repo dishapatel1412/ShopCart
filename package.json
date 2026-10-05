@@ -23,8 +23,5 @@
     },
     "keywords": [],
     "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "firebase": "^12.13.0"
-    }
+    "license": "ISC"
 }

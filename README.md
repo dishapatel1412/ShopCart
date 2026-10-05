@@ -1,59 +1,260 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ShopCart
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+##  Overview
 
-## About Laravel
+ShopCart is an e-commerce web application built with Laravel that allows users to browse products, add products to their cart or wishlist, and place orders through Cash on Delivery (COD) or online payment.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The application is designed to provide a convenient shopping experience where users can discover and purchase products for their everyday needs as well as special occasions.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+##  Key Features
 
-## Learning Laravel
+* User registration and authentication
+* Browse and view products
+* Add products to cart
+* Update and remove cart items
+* Add and remove products from wishlist
+* Purchase products using:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+* Cash on Delivery (COD)
+* Online payment
+* View order history
+* View order details
+* Receive product offers
+* Product management
+* Order management
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+##  Product & Catalog
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+ShopCart provides a product catalog where users can browse available products and view individual product details before making a purchase.
 
-### Premium Partners
+### Product functionality
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+* Product listing
+* Product details
+* Product images
+* Product pricing
 
-## Contributing
+The catalog is backed by a relational database, allowing product information to be managed and associated with the relevant entities.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+##  Cart & Wishlist
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Cart
 
-## Security Vulnerabilities
+Users can add products to their cart before proceeding to checkout.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Cart functionality includes:
 
-## License
+* Add product to cart
+* Update product quantity
+* Remove product from cart
+* View cart items
+* Calculate cart totals
+* Proceed to checkout
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Wishlist
+
+Users can save products they are interested in purchasing later by adding them to their wishlist.
+
+Wishlist functionality includes:
+
+* Add product to wishlist
+* Remove product from wishlist
+* View saved products
+* Move/add wishlist products to cart
+
+---
+
+##  Checkout & Order Workflow
+
+The shopping workflow follows the following process:
+
+Browse Products
+       ↓
+View Product
+       ↓
+Add to Cart
+       ↓
+Review Cart
+       ↓
+Checkout
+       ↓
+Select Payment Method
+       ↓
+ ┌───────────────┐
+ │               │
+COD          Online Payment
+ │               │
+ └───────┬───────┘
+         ↓
+    Order Created
+         ↓
+    Order History
+
+Users can choose between Cash on Delivery and online payment during checkout.
+
+After placing an order, users can view their previous purchases through the order history section.
+
+---
+
+##  Database Design
+
+ShopCart uses **MySQL** as its relational database.
+
+The application uses relationships between entities such as:
+
+* Users
+* Products
+* Categories
+* Cart
+* Wishlist
+* Orders
+* Order Items
+* Payments
+
+---
+
+##  Laravel Concepts Used
+
+ShopCart was developed using Laravel and demonstrates the following concepts:
+
+* MVC architecture
+* Routing
+* Controllers
+* Blade templates
+* Eloquent ORM
+* Eloquent relationships
+* Migrations
+* Database queries
+* Authentication
+* Form validation
+* Middleware
+* Sessions
+* File/image handling
+* CRUD operations
+* Laravel configuration
+* Environment variables
+* Payment gateway integration
+* Discount and coupon management
+* Email notifications
+* Order status notifications
+
+---
+
+##  Screenshots
+
+---
+
+## 🚀 Installation
+
+### Prerequisites
+
+Make sure the following are installed:
+
+* PHP
+* Composer
+* MySQL
+* Node.js & npm
+* Laravel-compatible PHP extensions
+* XAMPP / Laragon or another local PHP development environment
+
+### 1. Clone the repository
+
+git clone https://github.com/dishapatel1412/ShopCart.git
+cd ShopCart
+
+### 2. Install PHP dependencies
+
+composer install
+
+### 3. Install frontend dependencies
+
+npm install
+
+### 4. Create the environment file
+
+cp .env.example .env
+
+### 5. Generate the application key
+
+php artisan key:generate
+
+### 6. Configure the database
+
+Update the database configuration in `.env`:
+.env:
+
+DB_DATABASE=shopcart
+DB_USERNAME=root
+DB_PASSWORD=
+
+Create the corresponding database in MySQL before running the migrations.
+
+### 7. Run migrations
+
+php artisan migrate
+
+For development:
+npm run dev
+
+### 9. Start the Laravel development server
+
+php artisan serve
+
+The application will then be available at: http://127.0.0.1:8000
+
+---
+
+## 🔮 Future Improvements
+
+Potential improvements for future versions include:
+
+* Product reviews and ratings
+* Advanced product search and filtering
+* Improved order tracking
+* Inventory management
+* Admin analytics dashboard
+* Automated testing expansion
+* Performance optimization
+* Production deployment
+
+---
+
+## 🛠️ Tech Stack
+
+**Backend**
+
+* PHP
+* Laravel
+
+**Frontend**
+
+* Blade
+* HTML
+* CSS
+* JavaScript
+* Bootstrap
+
+**Database**
+
+* MySQL
+
+**Tools**
+
+* Composer
+* npm
+* Git/GitHub
+* Laragon
+
+---
+
+## 👩‍💻 Author
+
+**Disha Patel**
+
+* GitHub: https://github.com/dishapatel1412

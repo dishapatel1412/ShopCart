@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
-    @vite(['resources/css/app.css', 'resources/js/admin-chat.js'])
+    <link rel="stylesheet" href="{{ asset('assets/css/index.css') }}">
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -38,7 +38,8 @@
     </div>
 
     @include('admin.layout.footer')
+    <script src="{{ asset('assets/js/script.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @yield('scripts')
-     </body>
+    </body>
 </html>

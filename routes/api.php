@@ -12,10 +12,7 @@ use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\ProductInquiryController;
-use App\Http\Controllers\Api\ChatController;
-
 use App\Http\Controllers\Api\Admin\ProductInquiryController as AdminProductInquiryController;
-use App\Http\Controllers\Api\Admin\ChatController as AdminChatController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -73,15 +70,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/admin/inquiry', [AdminProductInquiryController::class, 'index']);
     Route::post('/admin/inquiry/{inquiry}/reply', [AdminProductInquiryController::class, 'store']);
-
-    Route::get('chat', [ChatController::class, 'viewMessage']);
-    Route::post('chat/message', [ChatController::class, 'sendMessage']);
-    Route::post('chat/location', [ChatController::class, 'sendLocation']);
-    Route::post('chat/status', [ChatController::class, 'updateStatus']);
-    Route::get('chat/download/{file}', [ChatController::class, 'downloadPdf']);
-    
-    Route::get('admin/chat', [AdminChatController::class, 'adminViewAll']);
-    Route::post('admin/chat/{userId}', [AdminChatController::class, 'viewConversation']);
-    Route::post('admin/chat/{userId}/message', [AdminChatController::class, 'replyToUser']);
-    Route::post('admin/chat/{userId}/location', [AdminChatController::class, 'adminSendLocation']);
 });
